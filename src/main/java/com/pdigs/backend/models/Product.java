@@ -1,14 +1,11 @@
 package com.pdigs.backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-// This tells Hibernate to make a table out of this class
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -30,12 +27,15 @@ public class Product {
     @Column(nullable = false)
     private Float rating;
 
-    @Column(nullable = false)
-    private java.time.LocalDateTime creationTime;
+    @Column(nullable = false, name = "creation_time")
+    private LocalDateTime creationTime;
 
     @Column(nullable = false)
     private String tags;
 
+    private Integer classId;
+
+    @Column(name = "class_type")
     private Integer classType;
 
     // Getters and Setters
@@ -95,11 +95,11 @@ public class Product {
         this.rating = rating;
     }
 
-    public java.time.LocalDateTime getCreationTime() {
+    public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(java.time.LocalDateTime creationTime) {
+    public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
     }
 
@@ -109,6 +109,14 @@ public class Product {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 
     public Integer getClassType() {
