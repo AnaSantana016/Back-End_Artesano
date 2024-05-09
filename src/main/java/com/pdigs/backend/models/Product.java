@@ -38,7 +38,10 @@ public class Product {
     @Column(name = "class_type")
     private Integer classType;
 
-    // Getters and Setters
+    @OneToOne
+    @JoinColumn(name =   "cart_id")
+    private Cart cart;
+
     public Integer getId() {
         return id;
     }

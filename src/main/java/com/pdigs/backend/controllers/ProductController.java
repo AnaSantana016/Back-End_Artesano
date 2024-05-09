@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/products")
-public class ProductController {
+public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
