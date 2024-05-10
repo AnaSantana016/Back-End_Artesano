@@ -6,7 +6,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +29,13 @@ public class    ProductController {
         return ResponseEntity.ok("Product updated successfully");
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Iterable<Product> getProducts() {
-        return productRepository.findAll();
-    }
-
     @GetMapping
     public Iterable<Product> getProducts(@RequestParam(value = "filterBy", required = false) String filterBy,
-                                      @RequestParam(value = "order", required = false) String order) {
+                                         @RequestParam(value = "order", required = false) String order) {
 
         Sort sort;
+        if (filterBy == null || filterBy.equals("")) {filterBy= "id";}
+        Product product = new Product();
 
         if (order == null || order.isEmpty() || order.equals("asc")){
             sort = Sort.by(Sort.Direction.ASC, filterBy);
@@ -51,16 +47,16 @@ public class    ProductController {
         return productRepository.findAll(sort);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    @PutMapping
+    public ResponseEntity<String> updateProduct(@RequestParam (value = "id") Long id, @RequestBody Product product) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         BeanUtils.copyProperties(product, existingProduct, "id");
         Product updatedProduct = productRepository.save(existingProduct);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        return ResponseEntity.ok("Product Edited successfully");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
     }

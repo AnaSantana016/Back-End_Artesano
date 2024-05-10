@@ -1,7 +1,6 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Cart;
-import com.pdigs.backend.models.Product;
 import com.pdigs.backend.repositories.CartRepository;
 import com.pdigs.backend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/cart")
