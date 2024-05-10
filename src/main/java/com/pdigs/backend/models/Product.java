@@ -54,23 +54,6 @@ public class Product {
     @Column(name = "tag")
     private String tag;
 
-    @Column(name = "class")
-    private Integer classField;
-
-    @NotNull
-    @Column(name = "rating", nullable = false)
-    private Float rating;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "seller", nullable = false)
-    private String seller;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "tags", nullable = false)
-    private String tags;
-
     public Integer getId() {
         return id;
     }
@@ -157,38 +140,6 @@ public class Product {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public Integer getClassField() {
-        return classField;
-    }
-
-    public void setClassField(Integer classField) {
-        this.classField = classField;
-    }
-
-    public Float getRating() {
-        return rating;
-    }
-
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
-
-    public String getSeller() {
-        return seller;
-    }
-
-    public void setSeller(String seller) {
-        this.seller = seller;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
     }
 
 }

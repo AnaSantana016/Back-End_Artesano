@@ -2,14 +2,16 @@ package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Product;
 import com.pdigs.backend.repositories.ProductRepository;
-import org.springframework.beans.BeanUtils;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -30,28 +32,37 @@ public class    ProductController {
     }
 
     @GetMapping
-    public Iterable<Product> getProducts(@RequestParam(value = "filterBy", required = false) String filterBy,
-                                         @RequestParam(value = "order", required = false) String order) {
+    public Iterable<Product> getProducts(
+            @RequestParam(value = "filterField", required = false) String filterField,
+            @RequestParam(value = "filterValue", required = false) String filterValue,
+            @RequestParam(value = "sortOrder", required = false) String sortOrder) {
 
-        Sort sort;
-        if (filterBy == null || filterBy.equals("")) {filterBy= "id";}
-        Product product = new Product();
+        Sort sort = sortOrder == null || sortOrder.isEmpty() || sortOrder.equals("asc")
+                ? Sort.by(Sort.Direction.ASC, filterField != null && !filterField.isEmpty() ? filterField : "id")
+                : Sort.by(Sort.Direction.DESC, filterField != null && !filterField.isEmpty() ? filterField : "id");
 
-        if (order == null || order.isEmpty() || order.equals("asc")){
-            sort = Sort.by(Sort.Direction.ASC, filterBy);
-        }else if (order.equals("desc")){
-            sort = Sort.by(Sort.Direction.DESC, filterBy);
-        } else {
-            return new ArrayList<>();
+        Map<String, Function<String, Iterable<Product>>> filterMethods = new HashMap<>();
+        filterMethods.put("name", productRepository::findByName);
+        filterMethods.put("size", productRepository::findBySize);
+        filterMethods.put("type", productRepository::findByType);
+        filterMethods.put("color", productRepository::findByColor);
+        filterMethods.put("tag", productRepository::findByTag);
+
+        if (filterValue != null && !filterValue.isEmpty()) {
+            Function<String, Iterable<Product>> filterMethod = filterMethods.get(filterField);
+            if (filterMethod != null) {
+                return filterMethod.apply(filterValue);
+            } else {
+                return new ArrayList<>();
+            }
         }
+
         return productRepository.findAll(sort);
     }
 
     @PutMapping
     public ResponseEntity<String> updateProduct(@RequestParam (value = "id") Long id, @RequestBody Product product) {
-        Product existingProduct = productRepository.findById(id).orElseThrow();
-        BeanUtils.copyProperties(product, existingProduct, "id");
-        Product updatedProduct = productRepository.save(existingProduct);
+        productRepository.save(product);
         return ResponseEntity.ok("Product Edited successfully");
     }
 
