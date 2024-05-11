@@ -1,14 +1,13 @@
 package com.pdigs.backend.controllers;
 
+import com.pdigs.backend.models.Follows;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
-import com.pdigs.backend.repositories.LikesRepository;
 import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -68,6 +67,16 @@ public class UserController {
     public ResponseEntity<Integer> countFolloweds(@RequestParam(value = "id") Long id) {
         int followedsCount = followsRepository.countByFollower(userRepository.findById(id).orElse(null));
         return ResponseEntity.ok(followedsCount);
+    }
+    @GetMapping("/getFollowers")
+    public ResponseEntity<Iterable<Follows>> getFollowers(@RequestParam(value = "id") Long id) {
+        Iterable<Follows> followers = followsRepository.getFollowsByFollowed(userRepository.findById(id).orElse(null));
+        return ResponseEntity.ok(followers);
+    }
+    @GetMapping("/getFolloweds")
+    public ResponseEntity<Iterable<Follows>> getFolloweds(@RequestParam(value = "id") Long id) {
+        Iterable<Follows> followeds = followsRepository.getFollowsByFollower(userRepository.findById(id).orElse(null));
+        return ResponseEntity.ok(followeds);
     }
 
 
