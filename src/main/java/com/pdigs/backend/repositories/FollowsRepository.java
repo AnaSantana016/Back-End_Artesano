@@ -5,12 +5,10 @@ import com.pdigs.backend.models.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface FollowsRepository extends CrudRepository<Follows, Long> {
-    Iterable<Follows> getFollowsByFollower(User follower);
-    Iterable<Follows> getFollowsByFollowed(User followed);
-    Iterable<Follows> getFollowsByFollowerAndFollowed(User follower, User followed);
 
-    Integer countByFollowed(User user);
-    Integer countByFollower(User user);
+    Iterable<User> findByFollowed_Id(Integer followed_id);
+    Iterable<User> findByFollower_Id(Integer followers_Id);
+
     void deleteById(Long id);
     Boolean existsFollowsByFollowerAndAndFollowed(User follower, User followed);
 }
