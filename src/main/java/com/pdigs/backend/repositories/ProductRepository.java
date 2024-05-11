@@ -14,4 +14,5 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     Iterable<Product> findByColor(String color);
     Iterable<Product> findByTag(String tag);
     Iterable<Product> findAll(Sort sort);
+    Iterable<Product> findAllBySellerId(Integer id);
 }
