@@ -10,6 +10,6 @@ public interface LikesRepository extends CrudRepository<Likes, Long> {
     Iterable<Product> getLikesByProductLiked(Product product);
     Iterable<User> getLikesByUserWhoLiked(User user);
     Long countByProductLiked(Product product);
-    void deleteById(Integer id);
+    void deleteById(Long id);
 }
 

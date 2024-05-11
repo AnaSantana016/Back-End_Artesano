@@ -9,7 +9,7 @@ public interface SubscriptionsRepository extends CrudRepository<Subscriptions, L
     Iterable<Subscriptions> getSubscriptionsBySubscribedTo(User suscribedTo);
     Long countBySuscribedTo(User suscriberTo);
     Long countBySuscriber(User suscriber);
-    void deleteById(Integer id);
+    void deleteById(Long id);
     void deleteBySuscriberAndAndSubscribedTo(User suscriber, User suscribedTo);
 }
 

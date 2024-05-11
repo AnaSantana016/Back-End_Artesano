@@ -10,6 +10,6 @@ public interface FollowsRepository extends CrudRepository<Follows, Long> {
 
     Integer countByFollowed(User user);
     Integer countByFollower(User user);
-    void deleteById(Integer id);
+    void deleteById(Long id);
 }
 
