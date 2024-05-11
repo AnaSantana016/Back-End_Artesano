@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,9 +15,9 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private LocalDateTime creation_time;
+    private LocalDateTime creationTime;
     private String address;
-    private Long las_viewed;
+    private Long lastViewed;
 
     public Integer getId() {
         return id;
@@ -52,12 +51,12 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getCreation_time() {
-        return creation_time;
+    public LocalDateTime getCreationTime() {
+        return creationTime;
     }
 
-    public void setCreation_time(LocalDateTime creation_time) {
-        this.creation_time = creation_time;
+    public void setCreationTime(LocalDateTime creation_time) {
+        this.creationTime = creation_time;
     }
 
     public String getAddress() {
@@ -68,11 +67,11 @@ public class User {
         this.address = address;
     }
 
-    public Long getLas_viewed() {
-        return las_viewed;
+    public Long getLastViewed() {
+        return lastViewed;
     }
 
-    public void setLas_viewed(Long las_viewed) {
-        this.las_viewed = las_viewed;
+    public void setLastViewed(Long lastViewed) {
+        this.lastViewed = lastViewed;
     }
 }
