@@ -2,14 +2,12 @@ package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
-import com.pdigs.backend.repositories.LikesRepository;
 import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,6 +16,7 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private FollowsRepository followsRepository;
 
     @PostMapping
@@ -59,16 +58,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/followers")
+    public Iterable<User> countFollowers(@RequestParam(value = "id") Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return userRepository.getFollowers(user.orElse(null));
+    }
+    @GetMapping("/following")
+    public Iterable<User> countFollowing(@RequestParam(value = "id") Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return userRepository.getFollowing(user.orElse(null));
+    }
+
     @GetMapping("/countFollowers")
-    public ResponseEntity<Integer> countFollowers(@RequestParam(value = "id") Long id) {
-        int followersCount = followsRepository.countByFollowed(userRepository.findById(id).orElse(null));
-        return ResponseEntity.ok(followersCount);
-    }
-    @GetMapping("/countFolloweds")
-    public ResponseEntity<Integer> countFolloweds(@RequestParam(value = "id") Long id) {
-        int followedsCount = followsRepository.countByFollower(userRepository.findById(id).orElse(null));
-        return ResponseEntity.ok(followedsCount);
+    public Integer countFollowersCount(@RequestParam(value = "id") Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return userRepository.getFollowers(user.orElse(null)).size();
     }
 
-
+    @GetMapping("/countFollowing")
+    public Integer countFollowingCount(@RequestParam(value = "id") Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return userRepository.getFollowing(user.orElse(null)).size();
+    }
 }
