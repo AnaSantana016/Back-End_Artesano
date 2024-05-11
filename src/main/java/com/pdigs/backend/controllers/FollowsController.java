@@ -3,6 +3,7 @@ package com.pdigs.backend.controllers;
 import com.pdigs.backend.models.Follows;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
+import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ public class FollowsController {
 
     @Autowired
     private FollowsRepository followsRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public FollowsController(FollowsRepository followsRepository) {
         this.followsRepository = followsRepository;
@@ -43,5 +46,4 @@ public class FollowsController {
         boolean isFollowedBy = followsRepository.existsFollowsByFollowerAndAndFollowed(follower, followed);
         return ResponseEntity.ok(isFollowedBy);
     }
-
 }
