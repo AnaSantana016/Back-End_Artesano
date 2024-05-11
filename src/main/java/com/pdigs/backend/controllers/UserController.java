@@ -1,13 +1,18 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Follows;
+import com.pdigs.backend.models.Product;
+import com.pdigs.backend.models.Subscriptions;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
+import com.pdigs.backend.repositories.ProductRepository;
+import com.pdigs.backend.repositories.SubscriptionsRepository;
 import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,7 +22,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private FollowsRepository followsRepository;
+    @Autowired
+    private SubscriptionsRepository subscriptionsRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody User user) {
@@ -69,14 +79,50 @@ public class UserController {
         return ResponseEntity.ok(followedsCount);
     }
     @GetMapping("/getFollowers")
-    public ResponseEntity<Iterable<Follows>> getFollowers(@RequestParam(value = "id") Long id) {
-        Iterable<Follows> followers = followsRepository.getFollowsByFollowed(userRepository.findById(id).orElse(null));
+    public ResponseEntity<List<User>> getFollowers(@RequestParam(value = "id") Long id) {
+        Iterable<Follows> follows = followsRepository.getFollowsByFollowed(userRepository.findById(id).orElse(null));
+        List<User> followers = new ArrayList<>();
+        for(Follows follower : follows){
+            followers.add(follower.getFollower());
+        }
         return ResponseEntity.ok(followers);
     }
     @GetMapping("/getFolloweds")
-    public ResponseEntity<Iterable<Follows>> getFolloweds(@RequestParam(value = "id") Long id) {
-        Iterable<Follows> followeds = followsRepository.getFollowsByFollower(userRepository.findById(id).orElse(null));
+    public ResponseEntity<List<User>> getFolloweds(@RequestParam(value = "id") Long id) {
+        Iterable<Follows> follows = followsRepository.getFollowsByFollower(userRepository.findById(id).orElse(null));
+        List<User> followeds = new ArrayList<>();
+        for(Follows followed : follows){
+            followeds.add(followed.getFollower());
+        }
         return ResponseEntity.ok(followeds);
+    }
+    @GetMapping("/getSubscribedsTo")
+    public ResponseEntity<List<User>> getSubscribedsTo(@RequestParam(value = "id") Long id) {
+        Iterable<Subscriptions> subscribedsTo = subscriptionsRepository.getSubscriptionsBySubscribedTo(userRepository.findById(id).orElse(null));
+        List<User> subscribeds = new ArrayList<>();
+        for(Subscriptions subscriber : subscribedsTo){
+            subscribeds.add(subscriber.getSubscriber());
+        }
+        return ResponseEntity.ok(subscribeds);
+    }
+    @GetMapping("/getSuscribers")
+    public ResponseEntity<List<User>> getSubscribers(@RequestParam(value = "id") Long id) {
+        Iterable<Subscriptions> subscribers = subscriptionsRepository.getSubscriptionsBySuscriber(userRepository.findById(id).orElse(null));
+        List<User> subscribersTo = new ArrayList<>();
+        for(Subscriptions subscriber : subscribers){
+            subscribersTo.add(subscriber.getSubscriber());
+        }
+        return ResponseEntity.ok(subscribersTo);
+    }
+
+    @GetMapping("/getProducts")
+    public ResponseEntity<List<Integer>> getProducts(@RequestParam(value = "id") Integer id) {
+        Iterable<Product> products = productRepository.findAllBySellerId(id);
+        List<Integer> productsList = new ArrayList<>();
+        for(Product product : products){
+            productsList.add(product.getId());
+        }
+        return ResponseEntity.ok(productsList);
     }
 
 
