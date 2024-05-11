@@ -19,13 +19,19 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     private FollowsRepository followsRepository;
-    
-    
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody User user) {
         userRepository.save(user);
         return ResponseEntity.ok("User created successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+        User user = userRepository.findUserByEmail(email);
+        if (user != null && user.getPassword().equals(password)) return ResponseEntity.ok("User logged in successfully");
+
+        return ResponseEntity.ok("Email or password is incorrect");
     }
 
     @GetMapping
