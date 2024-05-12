@@ -40,7 +40,6 @@ public class CartController {
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
 //        cartRepository.save(request);
         Cart cart = request;
-        cartRepository.incrementAmount(request);
         cartRepository.save(cart);
         return ResponseEntity.ok("Product added successfully to the sopping cart");
     }
