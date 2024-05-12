@@ -23,20 +23,18 @@ public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-    /*@Autowired
-    private UserRepository userRepository;
-*/
+
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    @PostMapping
+    @PostMapping("/createProducts")
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
         productRepository.save(product);
         return ResponseEntity.ok("Product updated successfully");
     }
 
-    @GetMapping
+    @GetMapping("/getProducts")
     public Iterable<Product> getProducts(
             @RequestParam(value = "filterField", required = false) String filterField,
             @RequestParam(value = "filterValue", required = false) String filterValue,
@@ -65,13 +63,13 @@ public class    ProductController {
         return productRepository.findAll(sort);
     }
 
-    @PutMapping
+    @PutMapping("/updateProduct")
     public ResponseEntity<String> updateProduct(@RequestParam (value = "id") Long id, @RequestBody Product product) {
         productRepository.save(product);
         return ResponseEntity.ok("Product Edited successfully");
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteProduct")
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
