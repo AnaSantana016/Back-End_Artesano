@@ -1,6 +1,7 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Cart;
+import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.CartRepository;
 import com.pdigs.backend.repositories.FollowsRepository;
@@ -43,18 +44,25 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
-        Optional<Cart> existingCart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser());
 
-        if (existingCart.isPresent()) {
-            Cart cart = existingCart.get();
-            cart.setAmount(request.getAmount());
-            cartRepository.save(cart);
-            return ResponseEntity.ok("Product amount updated successfully");
-        } else {
-            cartRepository.save(request);
-            return ResponseEntity.ok("Product added successfully");
+        Iterable<Cart> existingcarts = cartRepository.findCartsWithProductsByUserId(request.getUser().getId());
+
+        if (existingcarts != null){
+            for (Cart cart : existingcarts) {
+                if (cart.getProduct().getId().equals(request.getProduct().getId())
+                        && cart.getProduct().getTag().equals(request.getProduct().getTag())
+                        && cart.getProduct().getType().equals(request.getProduct().getType())
+                        && cart.getProduct().getColor().equals(request.getProduct().getColor())) {
+                    cart.setAmount(cart.getAmount() + request.getAmount());
+                    cartRepository.save(cart);
+                    return ResponseEntity.ok("Product updated successfully the sopping cart");
+                }
+            }
         }
+        cartRepository.save(request);
+        return ResponseEntity.ok("Product added successfully to the sopping cart");
     }
+
     @PutMapping(params = "product_id")
     public ResponseEntity<String> updateProductAmount(@RequestBody Cart request, @RequestParam Integer product_id) {
         if (request.getAmount() == 0){
