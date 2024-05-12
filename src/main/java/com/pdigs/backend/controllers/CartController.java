@@ -47,13 +47,12 @@ public class CartController {
         Cart cart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser()).orElse(null);
         if (cart != null) {
             cart.setAmount(request.getAmount());
-            return ResponseEntity.ok("Cantidad de producto actualizada en el carrito existente");
+            return ResponseEntity.of(Optional.ofNullable(null));
         } else {
             cartRepository.save(request);
-            return ResponseEntity.ok("Producto agregado correctamente al carrito de compras");
+            return ResponseEntity.ok("Product added successfully");
         }
     }
-
     @PutMapping(params = "product_id")
     public ResponseEntity<String> updateProductAmount(@RequestBody Cart request, @RequestParam Integer product_id) {
         if (request.getAmount() == 0){
