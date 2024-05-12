@@ -1,7 +1,6 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Cart;
-import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.CartRepository;
 import com.pdigs.backend.repositories.FollowsRepository;
@@ -44,6 +43,7 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
+        Optional<Cart> existingCart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser());
 
         Iterable<Cart> existingcarts = cartRepository.findCartsWithProductsByUserId(request.getUser().getId());
 
@@ -63,7 +63,6 @@ public class CartController {
         cartRepository.save(request);
         return ResponseEntity.ok("Product added successfully to the sopping cart");
     }
-
     @PutMapping(params = "product_id")
     public ResponseEntity<String> updateProductAmount(@RequestBody Cart request, @RequestParam Integer product_id) {
         if (request.getAmount() == 0){

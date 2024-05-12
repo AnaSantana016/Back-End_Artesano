@@ -23,20 +23,18 @@ public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-    /*@Autowired
-    private UserRepository userRepository;
-*/
+
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    @PostMapping
+    @PostMapping("/createProducts")
     public ResponseEntity<String> createProduct(@RequestBody Product product) {
         productRepository.save(product);
         return ResponseEntity.ok("Product updated successfully");
     }
 
-    @GetMapping
+    @GetMapping("/getProducts")
     public Iterable<Product> getProducts(
             @RequestParam(value = "filterField", required = false) String filterField,
             @RequestParam(value = "filterValue", required = false) String filterValue,
