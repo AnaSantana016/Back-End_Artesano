@@ -43,11 +43,13 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
+        Optional<Cart> existingCart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser());
 
-        Cart cart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser()).orElse(null);
-        if (cart != null) {
+        if (existingCart.isPresent()) {
+            Cart cart = existingCart.get();
             cart.setAmount(request.getAmount());
-            return ResponseEntity.of(Optional.ofNullable(null));
+            cartRepository.save(cart);
+            return ResponseEntity.ok("Product amount updated successfully");
         } else {
             cartRepository.save(request);
             return ResponseEntity.ok("Product added successfully");
