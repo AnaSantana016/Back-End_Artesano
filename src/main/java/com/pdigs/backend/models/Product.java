@@ -14,6 +14,9 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    /*Borrar después*/
+    private String images_path;
+    /**/
     @Size(max = 255)
     @NotNull
     @Column(name = "name", nullable = false)
@@ -142,4 +145,11 @@ public class Product {
         this.tag = tag;
     }
 
+    public String getImages_path() {
+        return images_path;
+    }
+
+    public void setImages_path(String images_path) {
+        this.images_path = images_path;
+    }
 }
