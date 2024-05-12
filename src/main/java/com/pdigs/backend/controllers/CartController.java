@@ -44,19 +44,14 @@ public class CartController {
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
 
-        Optional<Cart> existingCart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser());
-
-        if(existingCart.isPresent()) {
-
-            existingCart.get().setAmount(existingCart.get().getAmount() + request.getAmount());
-            Cart cart = existingCart.orElse(null);
-            if(existingCart != null){
-                cartRepository.save(cart);
-                return ResponseEntity.ok("Cantidad de producto actualizada en el carrito existente");
-            }
+        Cart cart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser()).orElse(null);
+        if (cart != null) {
+            cart.setAmount(request.getAmount());
+            return ResponseEntity.ok("Cantidad de producto actualizada en el carrito existente");
+        } else {
+            cartRepository.save(request);
+            return ResponseEntity.ok("Producto agregado correctamente al carrito de compras");
         }
-        cartRepository.save(request);
-        return ResponseEntity.ok("Producto agregado correctamente al carrito de compras");
     }
 
     @PutMapping(params = "product_id")
