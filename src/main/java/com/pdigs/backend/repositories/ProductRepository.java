@@ -17,9 +17,9 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     Iterable<Product> findByColor(String color);
     Iterable<Product> findByTag(String tag);
     Iterable<Product> findAll(Sort sort);
-    default List<User> getUsersWhoLiked(Product product) {
+    default List<Integer> getUsersWhoLiked(Product product) {
         return findByProductLiked(product);
     }
     @Query("SELECT f.userWhoLiked FROM Likes f WHERE f.productLiked = :product")
-    List<User> findByProductLiked(@Param("product_liked") Product product);
+    List<Integer> findByProductLiked(@Param("product") Product product);
 }

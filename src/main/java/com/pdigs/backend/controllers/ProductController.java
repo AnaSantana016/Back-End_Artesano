@@ -3,6 +3,7 @@ package com.pdigs.backend.controllers;
 import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.ProductRepository;
+import com.pdigs.backend.repositories.UserRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,8 @@ public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -75,6 +78,13 @@ public class    ProductController {
     }
     @GetMapping("/getUsersWhoLiked")
     public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {
-        return ResponseEntity.ok(productRepository.getUsersWhoLiked(productRepository.findById(id).orElse(null)));
+        List<User> usersWhoLiked = new ArrayList<>();
+        List<Integer> users_ids = new ArrayList<>();
+        users_ids = productRepository.getUsersWhoLiked(productRepository.findById(id).orElse(null));
+        for(Integer user_id: users_ids){
+            Long Longuser_id = Long.valueOf(user_id);
+            usersWhoLiked.add(userRepository.findById(Long.valueOf(user_id)).orElse(null));
+        }
+        return ResponseEntity.ok(usersWhoLiked);
     }
 }

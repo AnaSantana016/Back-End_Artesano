@@ -55,16 +55,16 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findBySubscriber(@Param("user") User user);
 
     default List<Product> getProducts(User user) {
-        return findBySeller(user);
+        return findBySeller(user.getId());
     }
 
     @Query("SELECT f FROM Product f WHERE f.sellerId = :user")
-    List<Product> findBySeller(@Param("user") User user);
+    List<Product> findBySeller(@Param("user") Integer userId);
 
 
     Iterable<User> findAll(Sort sort);
 
     default Integer countByProduct(User user){
-        return findBySeller(user).size();
+        return findBySeller(user.getId()).size();
     }
 }
