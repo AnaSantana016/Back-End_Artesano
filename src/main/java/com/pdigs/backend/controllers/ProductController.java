@@ -63,13 +63,13 @@ public class    ProductController {
         return productRepository.findAll(sort);
     }
 
-    @PutMapping("/updateProduct")
+    @PutMapping
     public ResponseEntity<String> updateProduct(@RequestParam (value = "id") Long id, @RequestBody Product product) {
         productRepository.save(product);
         return ResponseEntity.ok("Product Edited successfully");
     }
 
-    @DeleteMapping("/deleteProduct")
+    @DeleteMapping
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
