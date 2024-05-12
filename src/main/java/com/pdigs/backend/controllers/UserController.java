@@ -7,19 +7,24 @@ import com.pdigs.backend.repositories.ProductRepository;
 import com.pdigs.backend.repositories.SubscriptionsRepository;
 import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/users")
 public class UserController {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<String> createUser(@RequestBody User user) {
@@ -37,8 +42,30 @@ public class UserController {
     }
 
     @GetMapping("/getUsers")
-    public Iterable<User> getUsers() {
-        return userRepository.findAll();
+    public Iterable<User> getUsers(
+            @RequestParam(value = "filterField", required = false) String filterField,
+            @RequestParam(value = "filterValue", required = false) String filterValue,
+            @RequestParam(value = "sortOrder", required = false) String sortOrder) {
+
+        Sort sort = sortOrder == null || sortOrder.isEmpty() || sortOrder.equals("asc")
+                ? Sort.by(Sort.Direction.ASC, filterField != null && !filterField.isEmpty() ? filterField: "id")
+                : Sort.by(Sort.Direction.DESC, filterField != null && !filterField.isEmpty() ? filterField: "id");
+
+
+        Map<String, Function<String, Iterable<User>>> filterMethods = new HashMap<>();
+
+        filterMethods.put("name", userRepository::findByName);
+        filterMethods.put("email", userRepository::findByEmail);
+
+        if (filterValue != null && !filterValue.isEmpty()) {
+            Function<String, Iterable<User>> filterMethod = filterMethods.get(filterField);
+            if (filterMethod != null){
+                return filterMethod.apply(filterValue);
+            }else{
+                return new ArrayList<>();
+            }
+        }
+        return userRepository.findAll(sort);
     }
 
     @PutMapping("/updateUser")
@@ -97,8 +124,8 @@ public class UserController {
     public ResponseEntity<List<Product>> getProducts(@RequestParam(value = "id") Long id) {
         return ResponseEntity.ok(userRepository.getProducts(userRepository.findById(id).orElse(null)));
     }
-    @GetMapping("/getProductsLiked")
-    public ResponseEntity<List<Product>> getProductsLiked(@RequestParam(value = "id") Long id) {
-        return ResponseEntity.ok(userRepository.getProductsLiked(userRepository.findById(id).orElse(null)));
-    }
+//    @GetMapping("/getProductsLiked")
+//    public ResponseEntity<List<Product>> getProductsLiked(@RequestParam(value = "id") Long id) {
+//        return ResponseEntity.ok(userRepository.getProductsLiked(userRepository.findById(id).orElse(null)));
+//    }
 }

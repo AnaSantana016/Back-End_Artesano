@@ -12,13 +12,11 @@ import java.util.List;
 public interface ProductRepository extends CrudRepository<Product, Long> {
 
     Iterable<Product> findByName(String name);
-    Iterable<Product> findBySellerId(Integer id);
     Iterable<Product> findBySize(String size);
     Iterable<Product> findByType(String type);
     Iterable<Product> findByColor(String color);
     Iterable<Product> findByTag(String tag);
     Iterable<Product> findAll(Sort sort);
-    Iterable<Product> findAllBySellerId(Integer id);
     default List<User> getUsersWhoLiked(Product product) {
         return findByProductLiked(product);
     }
