@@ -1,6 +1,7 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Product;
+import com.pdigs.backend.models.ProductImage;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    ProductImageController productImageController ;
 
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -69,12 +73,16 @@ public class    ProductController {
     @DeleteMapping
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
+        for(ProductImage productImage : productRepository.findImages(productRepository.findById(id).orElse(null))){
+
+            productImageController.deleteProductImage(productImage);
+        }
         return ResponseEntity.ok("Product deleted successfully");
     }
 
     @GetMapping("/getImages")
     public ResponseEntity<List<String>> getImages(@RequestParam(value = "id") Long id){
-        return ResponseEntity.ok(productRepository.findImages(productRepository.findById(id).orElse(null)));
+        return ResponseEntity.ok(productRepository.findImagesURLs(productRepository.findById(id).orElse(null)));
     }
     @GetMapping("/getUsersWhoLiked")
     public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {

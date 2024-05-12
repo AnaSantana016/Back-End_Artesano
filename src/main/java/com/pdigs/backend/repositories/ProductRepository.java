@@ -1,6 +1,7 @@
 package com.pdigs.backend.repositories;
 
 import com.pdigs.backend.models.Product;
+import com.pdigs.backend.models.ProductImage;
 import com.pdigs.backend.models.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
@@ -31,5 +32,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     List<User> findByProductLiked(@Param("product") Product product);
 
     @Query("SELECT f.imagePath FROM ProductImage f WHERE f.product = :product")
-    List<String> findImages(@Param("product") Product product);
+    List<String> findImagesURLs(@Param("product") Product product);
+
+    @Query("SELECT f FROM ProductImage f WHERE f.product = :product")
+    List<ProductImage> findImages(@Param("product") Product product);
 }
