@@ -27,12 +27,12 @@ public interface UserRepository extends CrudRepository<User, Long> {
     default List<User> getFollowing(User user) {
         return findByFollower(user);
     }
-//    default List<Product> getProductsLiked(User user) {
-//        return findByUserWhoLiked(user);
-//    }
-//
-//    @Query("SELECT f.productLiked FROM Likes f WHERE f.userWhoLiked = :user")
-//    List<Product> findByUserWhoLiked(@Param("user") User user);
+    default List<Product> getProductsLiked(User user) {
+        return findByUserWhoLiked(user);
+    }
+
+    @Query("SELECT f.productLiked FROM Likes f WHERE f.userWhoLiked = :user")
+    List<Product> findByUserWhoLiked(@Param("user") User user);
 
     @Query("SELECT f.follower FROM Follows f WHERE f.followed = :user")
     List<User> findByFollowed(@Param("user") User user);
