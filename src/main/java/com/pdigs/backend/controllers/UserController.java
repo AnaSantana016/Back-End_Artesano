@@ -20,12 +20,6 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private FollowsRepository followsRepository;
-    @Autowired
-    private SubscriptionsRepository subscriptionsRepository;
-    @Autowired
-    private ProductRepository productRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<String> createUser(@RequestBody User user) {

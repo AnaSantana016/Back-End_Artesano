@@ -17,8 +17,6 @@ public class FollowsController {
 
     @Autowired
     private FollowsRepository followsRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     public FollowsController(FollowsRepository followsRepository) {
         this.followsRepository = followsRepository;
