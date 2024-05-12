@@ -45,12 +45,12 @@ public class UserController {
         return ResponseEntity.ok("Email or password is incorrect");
     }
 
-    @GetMapping
+    @GetMapping("/getUsers")
     public Iterable<User> getUsers() {
         return userRepository.findAll();
     }
 
-    @PutMapping
+    @PutMapping("/updateUser")
     public ResponseEntity<String> updateUser(@RequestParam(value = "id") Long id, @RequestBody User user) {
         if (userRepository.existsById(id)) {
             userRepository.save(user);
@@ -60,7 +60,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestParam(value = "id") Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);

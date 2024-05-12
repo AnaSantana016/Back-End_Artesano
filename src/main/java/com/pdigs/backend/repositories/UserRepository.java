@@ -1,5 +1,6 @@
 package com.pdigs.backend.repositories;
 
+import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -27,12 +28,33 @@ public interface UserRepository extends CrudRepository<User, Long> {
     default List<User> getFollowing(User user) {
         return findByFollower(user);
     }
+    default List<Product> getProductsLiked(User user) {
+        return findByUserWhoLiked(user);
+    }
 
-    // Override the JPQL query to get all users who are following a specific user
+    @Query("SELECT f.productLiked FROM Likes f WHERE f.userWhoLiked = :user")
+    List<Product> findByUserWhoLiked(@Param("product") User user);
+
     @Query("SELECT f.follower FROM Follows f WHERE f.followed = :user")
     List<User> findByFollowed(@Param("user") User user);
 
     // Override the JPQL query to get all users who are followed by a specific user
     @Query("SELECT f.followed FROM Follows f WHERE f.follower = :user")
     List<User> findByFollower(@Param("user") User user);
+
+    default List<User> getSubscribers(User user) {
+        return findBySubscriber(user);
+    }
+
+    // Method to get all followings of a user
+    default List<User> getSubscribeds(User user) {
+        return findBySubscribed(user);
+    }
+
+    @Query("SELECT f.subscriber FROM Subscriptions f WHERE f.subscribedTo = :user")
+    List<User> findBySubscribed(@Param("user") User user);
+
+    // Override the JPQL query to get all users who are followed by a specific user
+    @Query("SELECT f.suscribedTo FROM Subscriptions f WHERE f.subscriber = :user")
+    List<User> findBySubscriber(@Param("user") User user);
 }
