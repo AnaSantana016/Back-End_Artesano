@@ -35,7 +35,7 @@ public class UserController {
         return ResponseEntity.ok("User created successfully");
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
         User user = userRepository.findUserByEmail(email);
         if (user != null && user.getPassword().equals(password)) return ResponseEntity.ok("User logged in successfully");
