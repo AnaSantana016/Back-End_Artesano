@@ -23,9 +23,9 @@ public class    ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
+    /*@Autowired
     private UserRepository userRepository;
-
+*/
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -78,13 +78,12 @@ public class    ProductController {
     }
     @GetMapping("/getUsersWhoLiked")
     public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {
-        List<User> usersWhoLiked = new ArrayList<>();
-        List<Integer> users_ids = new ArrayList<>();
-        users_ids = productRepository.getUsersWhoLiked(productRepository.findById(id).orElse(null));
-        for(Integer user_id: users_ids){
-            Long Longuser_id = Long.valueOf(user_id);
-            usersWhoLiked.add(userRepository.findById(Long.valueOf(user_id)).orElse(null));
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            List<User> usersWhoLiked = productRepository.findByProductLiked(product);
+            return ResponseEntity.ok(usersWhoLiked);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(usersWhoLiked);
     }
 }
