@@ -21,5 +21,5 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
         return findByProductLiked(product);
     }
     @Query("SELECT f.userWhoLiked FROM Likes f WHERE f.productLiked = :product")
-    List<User> findByProductLiked(@Param("product") Product product);
+    List<User> findByProductLiked(@Param("product_liked") Product product);
 }
