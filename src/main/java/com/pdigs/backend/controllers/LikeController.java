@@ -15,13 +15,13 @@ public class LikeController {
     @Autowired
     private LikesRepository likeRepository;
 
-    @PostMapping
+    @PostMapping("/newLike")
     public ResponseEntity<String> addLike(@RequestBody Likes like) {
         likeRepository.save(like);
         return ResponseEntity.ok("Like added successfully");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/removeLike")
     public ResponseEntity<String> removeLike(@PathVariable Long id) {
         if (likeRepository.existsById(id)) {
             likeRepository.deleteById(id);

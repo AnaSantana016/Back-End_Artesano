@@ -28,7 +28,7 @@ public class FollowsController {
         return ResponseEntity.ok("Follow added successfully");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> removeFollow(@PathVariable Long id) {
         if (followsRepository.existsById(id)) {
             followsRepository.deleteById(id);
@@ -37,10 +37,9 @@ public class FollowsController {
             return ResponseEntity.badRequest().body("Follow not found");
         }
     }
-    public ResponseEntity<Boolean> isFollowedBy(@RequestParam(value = "followerId") Long followerId,
-                                                @RequestParam(value = "followedId") Long followedId) {
-        User follower = new User(); // Obtén el usuario correspondiente a followerId
-        User followed = new User(); // Obtén el usuario correspondiente a followedId
+    @GetMapping("/isFollowedBy")
+    public ResponseEntity<Boolean> isFollowedBy(@RequestParam(value = "follower") User follower,
+                                                @RequestParam(value = "followed") User followed) {
         boolean isFollowedBy = followsRepository.existsFollowsByFollowerAndAndFollowed(follower, followed);
         return ResponseEntity.ok(isFollowedBy);
     }
