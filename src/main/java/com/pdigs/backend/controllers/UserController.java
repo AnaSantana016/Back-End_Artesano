@@ -128,4 +128,9 @@ public class UserController {
     public ResponseEntity<List<Product>> getProductsLiked(@RequestParam(value = "id") Long id) {
         return ResponseEntity.ok(userRepository.getProductsLiked(userRepository.findById(id).orElse(null)));
     }
+    @GetMapping("/countProducts")
+    public ResponseEntity<Integer> countProducts(@RequestParam(value = "id") Long id) {
+        return ResponseEntity.ok(userRepository.countByProduct(userRepository.findById(id).orElse(null)));
+    }
+
 }

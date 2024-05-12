@@ -63,4 +63,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 
     Iterable<User> findAll(Sort sort);
+
+    default Integer countByProduct(User user){
+        return findBySeller(user).size();
+    }
 }
