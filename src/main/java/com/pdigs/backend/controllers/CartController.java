@@ -1,7 +1,9 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Cart;
+import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.CartRepository;
+import com.pdigs.backend.repositories.FollowsRepository;
 import com.pdigs.backend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/cart")
@@ -20,6 +23,8 @@ public class CartController {
     private CartRepository cartRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private FollowsRepository followsRepository;
 
     @GetMapping
     public List<Cart> getAllCarts(){return (List<Cart>) cartRepository.findAll();}
@@ -38,10 +43,20 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody Cart request) {
-//        cartRepository.save(request);
-        Cart cart = request;
-        cartRepository.save(cart);
-        return ResponseEntity.ok("Product added successfully to the sopping cart");
+
+        Optional<Cart> existingCart = cartRepository.findByProductAndUser(request.getProduct(), request.getUser());
+
+        if(existingCart.isPresent()) {
+
+            existingCart.get().setAmount(existingCart.get().getAmount() + request.getAmount());
+            Cart cart = existingCart.orElse(null);
+            if(existingCart != null){
+                cartRepository.save(cart);
+                return ResponseEntity.ok("Cantidad de producto actualizada en el carrito existente");
+            }
+        }
+        cartRepository.save(request);
+        return ResponseEntity.ok("Producto agregado correctamente al carrito de compras");
     }
 
     @PutMapping(params = "product_id")
@@ -71,6 +86,15 @@ public class CartController {
             }
         }
         return ResponseEntity.ok("Product deleted successfully from sopping cart");
+    }
+    @GetMapping("/getTotalAmount")
+    public ResponseEntity<Integer> getTotalAmount (User user){
+        Iterable<Cart> productsByUserId= cartRepository.findCartsWithProductsByUserId(user.getId());
+        Integer totalAmount=0;
+        for(Cart product : productsByUserId){
+            totalAmount = (int) (product.getAmount() * product.getProduct().getPrice());
+        }
+        return ResponseEntity.ok(totalAmount);
     }
 }
 
