@@ -51,6 +51,7 @@ public class CartController {
             for (Cart cart : existingcarts) {
                 if (cart.getProduct().getId().equals(request.getProduct().getId())
                         && cart.getProduct().getTag().equals(request.getProduct().getTag())
+                        && cart.getProduct().getSize().equals(request.getProduct().getSize())
                         && cart.getProduct().getType().equals(request.getProduct().getType())
                         && cart.getProduct().getColor().equals(request.getProduct().getColor())) {
                     cart.setAmount(cart.getAmount() + request.getAmount());
