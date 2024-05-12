@@ -8,8 +8,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends CrudRepository<Product, Long> {
+
+    Optional<Product> findById(Long aLong);
 
     Iterable<Product> findByName(String name);
     Iterable<Product> findBySize(String size);
@@ -26,4 +29,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     */
     @Query("SELECT f.userWhoLiked FROM Likes f WHERE f.productLiked = :product")
     List<User> findByProductLiked(@Param("product") Product product);
+
+    @Query("SELECT f.imagePath FROM ProductImage f WHERE f.product = :product")
+    List<String> findImages(@Param("product") Product product);
 }

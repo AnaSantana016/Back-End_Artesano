@@ -3,8 +3,6 @@ package com.pdigs.backend.controllers;
 import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.ProductRepository;
-import com.pdigs.backend.repositories.UserRepository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +57,6 @@ public class    ProductController {
                 return new ArrayList<>();
             }
         }
-
         return productRepository.findAll(sort);
     }
 
@@ -73,6 +70,11 @@ public class    ProductController {
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
+    }
+
+    @GetMapping("/getImages")
+    public ResponseEntity<List<String>> getImages(@RequestParam(value = "id") Long id){
+        return ResponseEntity.ok(productRepository.findImages(productRepository.findById(id).orElse(null)));
     }
     @GetMapping("/getUsersWhoLiked")
     public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {

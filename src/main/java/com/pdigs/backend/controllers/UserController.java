@@ -2,14 +2,15 @@ package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
-import com.pdigs.backend.repositories.FollowsRepository;
-import com.pdigs.backend.repositories.ProductRepository;
-import com.pdigs.backend.repositories.SubscriptionsRepository;
 import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -36,11 +37,32 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Object> login(@RequestParam String email, @RequestParam String password) {
         User user = userRepository.findUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) return ResponseEntity.ok("User logged in successfully");
+        if (user != null && user.getPassword().equals(sha256(password))){
+            return ResponseEntity.ok().body(user);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"Email or password is incorrect\"}");
+    }
 
-        return ResponseEntity.ok("Email or password is incorrect");
+    // Método para encriptar la contraseña con SHA-256
+    private String sha256(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @GetMapping("/getUsers")
@@ -134,6 +156,4 @@ public class UserController {
     public ResponseEntity<Integer> countProducts(@RequestParam(value = "id") Long id) {
         return ResponseEntity.ok(userRepository.countByProduct(userRepository.findById(id).orElse(null)));
     }
-
-
 }
