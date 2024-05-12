@@ -1,6 +1,7 @@
 package com.pdigs.backend.controllers;
 
 import com.pdigs.backend.models.Product;
+import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.ProductRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -70,5 +72,9 @@ public class    ProductController {
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
+    }
+    @GetMapping("/getUsersWhoLiked")
+    public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {
+        return ResponseEntity.ok(productRepository.getUsersWhoLiked(productRepository.findById(id).orElse(null)));
     }
 }

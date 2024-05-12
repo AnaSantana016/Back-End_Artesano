@@ -1,8 +1,6 @@
 package com.pdigs.backend.controllers;
 
-import com.pdigs.backend.models.Follows;
 import com.pdigs.backend.models.Product;
-import com.pdigs.backend.models.Subscriptions;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
 import com.pdigs.backend.repositories.ProductRepository;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,31 +91,20 @@ public class UserController {
 
     @GetMapping("/getSubscribedsTo")
     public ResponseEntity<List<User>> getSubscribedsTo(@RequestParam(value = "id") Long id) {
-        Iterable<Subscriptions> subscribedsTo = subscriptionsRepository.getSubscriptionsBySubscribedTo(userRepository.findById(id).orElse(null));
-        List<User> subscribeds = new ArrayList<>();
-        for(Subscriptions subscriber : subscribedsTo){
-            subscribeds.add(subscriber.getSubscriber());
-        }
-        return ResponseEntity.ok(subscribeds);
+        return ResponseEntity.ok(userRepository.getSubscribeds(userRepository.findById(id).orElse(null)));
     }
 
     @GetMapping("/getSuscribers")
     public ResponseEntity<List<User>> getSubscribers(@RequestParam(value = "id") Long id) {
-        Iterable<Subscriptions> subscribers = subscriptionsRepository.getSubscriptionsBySuscriber(userRepository.findById(id).orElse(null));
-        List<User> subscribersTo = new ArrayList<>();
-        for(Subscriptions subscriber : subscribers){
-            subscribersTo.add(subscriber.getSubscriber());
-        }
-        return ResponseEntity.ok(subscribersTo);
+        return ResponseEntity.ok(userRepository.getSubscribers(userRepository.findById(id).orElse(null)));
     }
 
     @GetMapping("/getProducts")
-    public ResponseEntity<List<Integer>> getProducts(@RequestParam(value = "id") Integer id) {
-        Iterable<Product> products = productRepository.findAllBySellerId(id);
-        List<Integer> productsList = new ArrayList<>();
-        for(Product product : products){
-            productsList.add(product.getId());
-        }
-        return ResponseEntity.ok(productsList);
+    public ResponseEntity<List<Product>> getProducts(@RequestParam(value = "id") Long id) {
+        return ResponseEntity.ok(userRepository.getProducts(userRepository.findById(id).orElse(null)));
+    }
+    @GetMapping("/getProductsLiked")
+    public ResponseEntity<List<Product>> getProductsLiked(@RequestParam(value = "id") Long id) {
+        return ResponseEntity.ok(userRepository.getProductsLiked(userRepository.findById(id).orElse(null)));
     }
 }

@@ -57,4 +57,13 @@ public interface UserRepository extends CrudRepository<User, Long> {
     // Override the JPQL query to get all users who are followed by a specific user
     @Query("SELECT f.suscribedTo FROM Subscriptions f WHERE f.subscriber = :user")
     List<User> findBySubscriber(@Param("user") User user);
+
+    default List<Product> getProducts(User user) {
+        return findBySeller(user);
+    }
+
+    @Query("SELECT f FROM Product f WHERE f.sellerId = :user")
+    List<Product> findBySeller(@Param("user") User user);
+
+
 }
