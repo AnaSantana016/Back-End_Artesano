@@ -29,8 +29,9 @@ public class UserController {
     @Autowired
     private ProductRepository productRepository;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<String> createUser(@RequestBody User user) {
+        System.out.println("user: "+ user);
         userRepository.save(user);
         return ResponseEntity.ok("User created successfully");
     }
@@ -124,6 +125,4 @@ public class UserController {
         }
         return ResponseEntity.ok(productsList);
     }
-
-
 }
