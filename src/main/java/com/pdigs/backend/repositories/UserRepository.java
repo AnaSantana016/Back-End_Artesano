@@ -33,7 +33,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     }
 
     @Query("SELECT f.productLiked FROM Likes f WHERE f.userWhoLiked = :user")
-    List<Product> findByUserWhoLiked(@Param("product") User user);
+    List<Product> findByUserWhoLiked(@Param("user") User user);
 
     @Query("SELECT f.follower FROM Follows f WHERE f.followed = :user")
     List<User> findByFollowed(@Param("user") User user);
