@@ -2,6 +2,8 @@ package com.pdigs.backend.models;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "purchase_history")
 public class PurchaseHistory {
@@ -20,6 +22,17 @@ public class PurchaseHistory {
 
     @JoinColumn(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "date")
+    private Instant date;
+
+    public Instant getDate() {
+        return date;
+    }
+
+    public void setDate(Instant date) {
+        this.date = date;
+    }
 
     public Integer getId() {
         return id;
