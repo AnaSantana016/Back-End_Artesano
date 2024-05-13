@@ -3,9 +3,9 @@ package com.pdigs.backend.controllers;
 import com.pdigs.backend.models.Follows;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.FollowsRepository;
-import com.pdigs.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class FollowsController {
         return ResponseEntity.ok("Follow added successfully");
     }
 
-    @DeleteMapping
+    /*@DeleteMapping
     public ResponseEntity<String> removeFollow(@PathVariable Long id) {
         if (followsRepository.existsById(id)) {
             followsRepository.deleteById(id);
@@ -37,6 +37,13 @@ public class FollowsController {
         } else {
             return ResponseEntity.badRequest().body("Follow not found");
         }
+    }*/
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity<String> removeFollow(@RequestBody Follows follows) {
+        followsRepository.deleteByFollowerAndFollowed(follows.getFollower(), follows.getFollowed());
+        return ResponseEntity.ok("Follow removed successfully");
     }
     @GetMapping("/isFollowedBy")
     public ResponseEntity<Boolean> isFollowedBy(@RequestParam(value = "follower") User follower,
