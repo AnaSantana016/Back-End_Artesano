@@ -1,10 +1,14 @@
 package com.pdigs.backend.repositories;
 
 import com.pdigs.backend.models.Follows;
+import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface FollowsRepository extends CrudRepository<Follows, Long> {
     Iterable<Follows> getFollowsByFollower(User follower);
@@ -16,6 +20,6 @@ public interface FollowsRepository extends CrudRepository<Follows, Long> {
     Boolean existsFollowsByFollowerAndAndFollowed(User follower, User followed);
 
     @Query("SELECT f FROM Follows f")
-    ResponseEntity<Iterable<Follows>> getAllFollows();
+    List<Follows> getAllFollows();
 }
 
