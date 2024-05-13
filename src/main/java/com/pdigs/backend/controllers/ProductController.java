@@ -29,9 +29,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         productRepository.save(product);
-        return ResponseEntity.ok("Product updated successfully");
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping("/getProducts")
