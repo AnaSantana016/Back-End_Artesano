@@ -1,8 +1,6 @@
 package com.pdigs.backend.controllers;
 
-import com.pdigs.backend.models.Cart;
 import com.pdigs.backend.models.Product;
-import com.pdigs.backend.models.ProductImage;
 import com.pdigs.backend.models.User;
 import com.pdigs.backend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +28,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        productRepository.save(product);
-        return ResponseEntity.ok(product);
+        Product save = productRepository.save(product);
+        return ResponseEntity.ok(save);
     }
 
     @GetMapping("/getProducts")
