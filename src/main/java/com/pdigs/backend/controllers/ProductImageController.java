@@ -30,7 +30,7 @@ public class ProductImageController {
     @GetMapping(params = "product_id", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Iterable<ProductImage> getProductImages(@RequestParam Long productId) {
 
-        Iterable<ProductImage> productImages = productImageRepository.findAllByProduct(productId);
+        Iterable<ProductImage> productImages = productImageRepository.findAllByProductID(productId);
         return productImages;
     }
 

@@ -1,5 +1,6 @@
 package com.pdigs.backend.controllers;
 
+import com.pdigs.backend.models.Cart;
 import com.pdigs.backend.models.Product;
 import com.pdigs.backend.models.ProductImage;
 import com.pdigs.backend.models.User;
@@ -18,13 +19,10 @@ import java.util.function.Function;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(path = "/products")
-public class    ProductController {
+public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    ProductImageController productImageController ;
 
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -73,10 +71,6 @@ public class    ProductController {
     @DeleteMapping
     public ResponseEntity<String> deleteProduct(@RequestParam (value = "id") Long id) {
         productRepository.deleteById(id);
-        for(ProductImage productImage : productRepository.findImages(productRepository.findById(id).orElse(null))){
-
-            productImageController.deleteProductImage(productImage);
-        }
         return ResponseEntity.ok("Product deleted successfully");
     }
 
