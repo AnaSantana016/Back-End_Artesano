@@ -29,19 +29,9 @@ public class FollowsController {
         return ResponseEntity.ok("Follow added successfully");
     }
 
-    /*@DeleteMapping
-    public ResponseEntity<String> removeFollow(@PathVariable Long id) {
-        if (followsRepository.existsById(id)) {
-            followsRepository.deleteById(id);
-            return ResponseEntity.ok("Follow removed successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Follow not found");
-        }
-    }*/
 
     @DeleteMapping
-    @Transactional
-    public ResponseEntity<String> removeFollow(@RequestBody Follows follows) {
+        public ResponseEntity<String> removeFollow(@RequestBody Follows follows) {
         followsRepository.deleteByFollowerAndFollowed(follows.getFollower(), follows.getFollowed());
         return ResponseEntity.ok("Follow removed successfully");
     }
