@@ -11,5 +11,7 @@ public interface CartRepository extends CrudRepository<Cart, Long> {
     Iterable<Cart> findCartsWithProductsByUserId(Integer user_id);
 
     Optional<Cart> findByProductAndUser(Product product, User User);
+
+    void deleteByProduct(Product product);
 }
 
