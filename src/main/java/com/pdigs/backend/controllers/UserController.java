@@ -85,11 +85,31 @@ public class UserController {
             Function<String, Iterable<User>> filterMethod = filterMethods.get(filterField);
             if (filterMethod != null){
                 return filterMethod.apply(filterValue);
-            }else{
+            }else {
                 return new ArrayList<>();
             }
         }
         return userRepository.findAll(sort);
+    }
+
+    @GetMapping("/getByFollowers")
+    public Iterable<User> orderByFollowers(){
+        Iterable<User> users = userRepository.findAll();
+
+        Map<User, Integer> userFollowers = new HashMap<>();
+
+        for (User user : users) {
+            userFollowers.put(user, userRepository.getFollowers(user).size());
+        }
+
+        List<Map.Entry<User, Integer>> entryList = new ArrayList<>(userFollowers.entrySet());
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        List<User> sortedUsers = new ArrayList<>();
+        for (Map.Entry<User, Integer> entry : entryList) {
+            sortedUsers.add(entry.getKey());
+        }
+
+        return sortedUsers;
     }
 
     @PutMapping("/updateUser")
