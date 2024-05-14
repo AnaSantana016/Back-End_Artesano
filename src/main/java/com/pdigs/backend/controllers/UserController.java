@@ -92,7 +92,7 @@ public class UserController {
         return userRepository.findAll(sort);
     }
 
-    @GetMapping("/orderFollowers")
+    @GetMapping("/getByFollowers")
     public Iterable<User> orderByFollowers(){
         Iterable<User> users = userRepository.findAll();
 
