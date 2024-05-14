@@ -66,7 +66,7 @@ public class CartController {
     @PutMapping
     public ResponseEntity<String> updateProductAmount(@RequestBody Cart request, @RequestParam Integer product_id) {
         if (request.getAmount() == 0){
-            deleteProductFromCart(request);
+            deleteProductFromCart(request.getProduct().getId(), product_id);
             return ResponseEntity.ok("Product updated successfully to the sopping cart");
         }
         Iterable<Cart> userCarts= cartRepository.findCartsWithProductsByUserId(request.getUser().getId());
@@ -81,10 +81,16 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteProductFromCart(@RequestBody Cart request) {
-        Iterable<Cart> userCarts= cartRepository.findCartsWithProductsByUserId(request.getUser().getId());
+    public ResponseEntity<String> deleteProductFromCart(@RequestBody Integer userId, @RequestParam Integer productId) {
+        Iterable<Cart> userCarts= cartRepository.findCartsWithProductsByUserId(userId);
 
         for (Cart cart : userCarts){
+            if (cart.getProduct().getId().equals(productId)){
+                cartRepository.delete(cart);
+            }
+        }
+
+        /*for (Cart cart : userCarts){
             if (cart.getProduct().getId().equals(request.getProduct().getId())
                     && cart.getProduct().getTag().equals(request.getProduct().getTag())
                     && cart.getProduct().getSize().equals(request.getProduct().getSize())
@@ -92,7 +98,7 @@ public class CartController {
                     && cart.getProduct().getColor().equals(request.getProduct().getColor())){
                 cartRepository.deleteByProduct(cart.getProduct());
             }
-        }
+        }*/
         return ResponseEntity.ok("Product deleted successfully from sopping cart");
     }
     @GetMapping("/getTotalAmount")
