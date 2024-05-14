@@ -54,11 +54,6 @@ public class Product {
     @Column(name = "tag")
     private String tag;
 
-    @Lob
-    @Column(name = "image")
-    private String image;
-
-
     public Integer getId() {
         return id;
     }
@@ -147,11 +142,4 @@ public class Product {
         this.tag = tag;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

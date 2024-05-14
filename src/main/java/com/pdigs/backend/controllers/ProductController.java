@@ -73,8 +73,8 @@ public class ProductController {
     }
 
     @GetMapping("/getImages")
-    public ResponseEntity<String> getImages(@RequestParam(value = "id") Long id){
-        return ResponseEntity.ok(productRepository.findById(id).orElse(null).getImage());
+    public ResponseEntity<List<String>> getImages(@RequestParam(value = "id") Long id){
+        return ResponseEntity.ok(productRepository.findImagesURLs(productRepository.findById(id).orElse(null)));
     }
     @GetMapping("/getUsersWhoLiked")
     public ResponseEntity<List<User>> getUsersWhoLiked(@RequestParam(value = "id") Long id) {
