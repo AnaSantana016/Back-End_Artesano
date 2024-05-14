@@ -15,9 +15,8 @@ public class ProductImage {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Long product;
 
     @Size(max = 255)
     @Column(name = "image_path")
@@ -39,11 +38,11 @@ public class ProductImage {
         this.name = name;
     }
 
-    public Product getProduct() {
+    public Long getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(Long product) {
         this.product = product;
     }
 
